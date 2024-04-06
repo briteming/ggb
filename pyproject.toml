@@ -1,0 +1,22 @@
+[project]
+name = "github-blog"
+version = "0.1.0"
+description = "Add your description here"
+authors = [
+    { name = "geoqiao", email = "realvincentqiao@gmail.com" }
+]
+dependencies = [
+    "Jinja2",
+    "PyGithub",
+    "feedgen",
+    "requests",
+    "transliterate",
+    "xpinyin",
+]
+readme = "README.md"
+requires-python = ">= 3.11"
+
+[tool.rye]
+managed = true
+virtual = true
+dev-dependencies = []
