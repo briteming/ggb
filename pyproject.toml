@@ -19,4 +19,8 @@ requires-python = ">= 3.11"
 [tool.rye]
 managed = true
 virtual = true
-dev-dependencies = []
+dev-dependencies = [
+    "fastapi[all]>=0.110.1",
+    "uvicorn[standard]>=0.29.0",
+    "ipykernel>=6.29.4",
+]
