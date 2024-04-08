@@ -100,6 +100,15 @@ def markdown2html(mdstr: str):
 
 
 def render_issue_body(issue: Issue):
+    """
+    Render the body of an issue by converting markdown to HTML and injecting it into a template.
+
+    Parameters:
+    issue (Issue): The issue object containing the body to render.
+
+    Returns:
+    str: The rendered HTML body of the issue.
+    """
     html_body = markdown2html(issue.body)
     env = Environment(loader=FileSystemLoader("templates"))
     template = env.get_template("articles.html")
