@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>{{ issue.title }}</title>
+  <style>
+    #container {
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    #header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #header h1 {
+      font-size: 2rem;
+    }
+
+    #body {
+      line-height: 1.8rem;
+    }
+
+    #footer {
+      text-align: right;
+      margin-top: 20px;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <div id="header">
+      <h1>{{ issue.title }}</h1>
+    </div>
+    <div id="body">
+      {{ html_body }}
+    </div>
+    <div id="footer">
+      <p>
+        <!-- 作者: {{ author }} -->
+        <br>
+        发布时间: {{ issue.updated_at }}
+        <br>
+        <!-- 评论数: {{ commentNum }} -->
+        <br>
+      </p>
+    </div>
+  </div>
+  <footer>
+    <p>Copyright &copy; 2024 geoqiao</p>
+    </footer>
+</body>
+</html>

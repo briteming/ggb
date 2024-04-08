@@ -6,5 +6,8 @@ dist/
 wheels/
 *.egg-info
 
+statics/
+backup/
+
 # venv
 .venv

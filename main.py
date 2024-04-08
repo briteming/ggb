@@ -10,13 +10,14 @@ import argparse
 import os
 import shutil
 
+import requests
 from github import Github
 from github.Issue import Issue
 from github.PaginatedList import PaginatedList
 from jinja2 import Environment, FileSystemLoader
 
 
-def dir_init():
+def dir_init(static_dir: str, backup_dir: str):
     """
     A function to initialize directories by removing existing ones and creating new ones.
     """
@@ -76,6 +77,42 @@ def save_index_as_html(content: str):
     f.close
 
 
+def markdown2html(mdstr: str):
+    """
+    Convert markdown text to HTML using the GitHub API.
+
+    Args:
+        mdstr (str): The markdown text to be converted to HTML.
+
+    Returns:
+        str: The HTML representation of the input markdown text.
+    """
+    payload = {"text": mdstr, "mode": "gfm"}
+    headers = {"Authorization": "token {}".format(options.github_token)}
+    try:
+        response = requests.post(
+            "https://api.github.com/markdown", json=payload, headers=headers
+        )
+        response.raise_for_status()  # Raises an exception if status code is not 200
+        return response.text
+    except requests.RequestException as e:
+        raise Exception("markdown2html error: {}".format(e))
+
+
+def render_issue_body(issue: Issue):
+    html_body = markdown2html(issue.body)
+    env = Environment(loader=FileSystemLoader("templates"))
+    template = env.get_template("articles.html")
+    return template.render(issue=issue, html_body=html_body)
+
+
+def save_articles_to_static_dir(issue: Issue, content: str):
+    path = static_dir + f"{issue.number}.html"
+    f = open(path, "w", encoding="utf-8")
+    f.write(content)
+    f.close
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("github_token", help="<github_token>")
@@ -85,7 +122,11 @@ if __name__ == "__main__":
     static_dir: str = "./statics/"
     backup_dir: str = "./backup/"
 
-    dir_init()
+    dir_init(static_dir, backup_dir)
     issues = get_all_issues(options.github_token, options.github_repo)
     article_list = render_article_list(issues)
     save_index_as_html(content=article_list)
+
+    for issue in issues:
+        content = render_issue_body(issue)
+        save_articles_to_static_dir(issue, content=content)
