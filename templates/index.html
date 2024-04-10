@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>geoqiao's pages</title>
   <style>
-        /* 重置默认样式 */
+    /* 重置默认样式 */
     * {
       margin: 0;
       padding: 0;
@@ -41,15 +41,25 @@
     #issues {
       list-style: none;
       padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
     }
 
     /* 问题卡片 */
     #issues li {
-      margin-bottom: 10px;
+      width: calc(33% - 20px);
+      margin-bottom: 20px;
       padding: 20px;
       background-color: #fff;
       border-radius: 4px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      transition: all 0.3s ease-in-out;
+    }
+
+    /* 鼠标悬停效果 */
+    #issues li:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.12);
     }
 
     /* 问题编号 */
@@ -71,9 +81,15 @@
       color: #333;
     }
 
-    /* 鼠标悬停效果 */
-    #issues li a:hover {
-      color: #000;
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      #issues {
+        flex-direction: column;
+      }
+
+      #issues li {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -85,7 +101,7 @@
     <ul id="issues">
       {% for issue in issues %}
         <li>
-          <a href="{{ issue.number }}.html">
+          <a href="./blog/{{ issue.number }}.html">
             <span class="issue-number">{{ issue.number }}</span>
             <span class="issue-title">{{ issue.title }}</span>
           </a>

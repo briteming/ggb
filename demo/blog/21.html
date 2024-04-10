@@ -1,15 +1,27 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Python编辑器-我的VSCode配置</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: sans-serif;
+      color: #333;
+      line-height: 1.5;
+      background-color: #fff;
+    }
     #container {
       width: 100%;
       max-width: 800px;
       margin: 0 auto;
+      padding: 20px;
     }
 
     #header {
@@ -24,11 +36,51 @@
     #body {
       line-height: 1.8rem;
     }
+    #body p {
+      margin-bottom: 10px;
+    }
+    pre {
+      background-color: #f6f8fa;
+      padding: 10px;
+      overflow: auto;
+    }
 
+    code {
+      font-family: monospace;
+      background-color: #fafafa;
+      padding: 2px;
+      border-radius: 4px;
+    }
+    a {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+    ol {
+      list-style: none;
+      padding: 10px;
+      margin: 0;
+      border: 1px solid #ddd;
+    }
+
+    ol li {
+      padding: 5px;
+      margin-bottom: 5px;
+      border-radius: 4px;
+    }
+    
     #footer {
       text-align: right;
       margin-top: 20px;
       font-size: 0.8rem;
+    }
+    @media (max-width: 768px) {
+      #container {
+        max-width: 100%;
+      }
     }
   </style>
 </head>
@@ -184,10 +236,8 @@
         <!-- 评论数:  -->
         <br>
       </p>
+      <p>Copyright &copy; 2024 geoqiao</p>
     </div>
   </div>
-  <footer>
-    <p>Copyright &copy; 2024 geoqiao</p>
-    </footer>
 </body>
 </html>

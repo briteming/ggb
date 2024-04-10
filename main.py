@@ -27,6 +27,7 @@ def dir_init(static_dir: str, backup_dir: str):
         shutil.rmtree(backup_dir)
 
     os.mkdir(static_dir)
+    os.mkdir(static_dir + "blog/")
     os.mkdir(backup_dir)
 
 
@@ -60,7 +61,7 @@ def render_article_list(issues: PaginatedList[Issue]):
     - str, the rendered article list HTML content.
     """
     env = Environment(loader=FileSystemLoader("templates"))
-    template = env.get_template("article_list.html")
+    template = env.get_template("index.html")
     return template.render(issues=issues)
 
 
@@ -71,7 +72,7 @@ def save_index_as_html(content: str):
     Parameters:
     content (str): The content to be written to the HTML file.
     """
-    path = static_dir + "article_list.html"
+    path = static_dir + "index.html"
     f = open(path, "w", encoding="utf-8")
     f.write(content)
     f.close
@@ -111,12 +112,12 @@ def render_issue_body(issue: Issue):
     """
     html_body = markdown2html(issue.body)
     env = Environment(loader=FileSystemLoader("templates"))
-    template = env.get_template("articles.html")
+    template = env.get_template("blog_content.html")
     return template.render(issue=issue, html_body=html_body)
 
 
 def save_articles_to_static_dir(issue: Issue, content: str):
-    path = static_dir + f"{issue.number}.html"
+    path = static_dir + f"blog/{issue.number}.html"
     f = open(path, "w", encoding="utf-8")
     f.write(content)
     f.close
@@ -128,7 +129,7 @@ if __name__ == "__main__":
     parser.add_argument("github_repo", help="<github_repo>")
     options = parser.parse_args()
 
-    static_dir: str = "./statics/"
+    static_dir: str = "./contents/"
     backup_dir: str = "./backup/"
 
     dir_init(static_dir, backup_dir)
