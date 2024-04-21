@@ -1,113 +1,17 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>geoqiao's pages</title>
-  <style>
-    /* 重置默认样式 */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+{% extends 'base.html' %}
 
-    /* 页面主体 */
-    body {
-      font-family: sans-serif;
-      color: #333;
-      background-color: #f1f1f1;
-    }
 
-    /* 页眉 */
-    header {
-      background-color: #fff;
-      padding: 20px;
-      text-align: center;
-    }
+{% block title %}Geoqiao's Page{% endblock %}
 
-    /* 页眉标题 */
-    header h1 {
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    /* 主体内容 */
-    main {
-      padding: 20px;
-    }
-
-    /* 问题列表 */
-    #issues {
-      list-style: none;
-      padding: 0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-    }
-
-    /* 问题卡片 */
-    #issues li {
-      width: calc(33% - 20px);
-      margin-bottom: 20px;
-      padding: 20px;
-      background-color: #fff;
-      border-radius: 4px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
-      transition: all 0.3s ease-in-out;
-    }
-
-    /* 鼠标悬停效果 */
-    #issues li:hover {
-      box-shadow: 0 4px 8px rgba(0,0,0,0.12);
-    }
-
-    /* 问题编号 */
-    .issue-number {
-      font-size: 16px;
-      font-weight: bold;
-      margin-right: 10px;
-    }
-
-    /* 问题标题 */
-    .issue-title {
-      font-size: 18px;
-      color: #333;
-    }
-
-    /* 问题链接 */
-    #issues li a {
-      text-decoration: none;
-      color: #333;
-    }
-
-    /* 响应式设计 */
-    @media (max-width: 768px) {
-      #issues {
-        flex-direction: column;
-      }
-
-      #issues li {
-        width: 100%;
-      }
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>geoqiao's pages</h1>
-  </header>
-  <main>
-    <ul id="issues">
-      {% for issue in issues %}
-        <li>
-          <a href="./blog/{{ issue.number }}.html">
-            <span class="issue-number">{{ issue.number }}</span>
-            <span class="issue-title">{{ issue.title }}</span>
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  </main>
-</body>
-</html>
+{% block content %}
+    <div class="posts">
+        {% for issue in issues %}
+            <article class="post">
+                <h2 class="post__title"><a href="./blog/{{ issue.number }}.html">{{ issue.title }}</a></h2>
+                <div class="post__meta">{{ issue.created_at.strftime('%Y-%m-%d') }}</div>
+                <div class="post__summary">{{ issue.body|truncate(200) }}</div>
+                <div class="read-more"><a href="./blog/{{ issue.number }}.html">Read More</a></div>
+            </article>
+        {% endfor %}
+    </div>
+{% endblock %}

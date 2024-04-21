@@ -11,3 +11,8 @@ backup/
 
 # venv
 .venv
+
+.DS_Store
+pyrightconfig.json
+
+.ruff_cache
