@@ -17,23 +17,27 @@ from github.PaginatedList import PaginatedList
 from jinja2 import Environment, FileSystemLoader
 
 
-def dir_init(static_dir: str, backup_dir: str):
+def dir_init(content_dir: str, backup_dir: str):
     """
     A function to initialize directories by removing existing ones and creating new ones.
     """
-    if os.path.exists(static_dir):
-        shutil.rmtree(static_dir)
+    if os.path.exists(content_dir):
+        shutil.rmtree(content_dir)
     if os.path.exists(backup_dir):
         shutil.rmtree(backup_dir)
 
-    os.mkdir(static_dir)
-    os.mkdir(static_dir + "blog/")
+    os.mkdir(content_dir)
+    os.mkdir(content_dir + "blog/")
     os.mkdir(backup_dir)
+
+    static_dir = content_dir + "static/"
+    if not os.path.exists(static_dir):
+        shutil.copytree("templates/static", static_dir)
 
 
 def get_all_issues(
-    github_token: str,  # type: str
-    github_repo: str,  # type: str
+    github_token: str,
+    github_repo: str,
 ) -> PaginatedList[Issue]:
     """Get all issues for a given GitHub repository.
 
@@ -72,7 +76,7 @@ def save_index_as_html(content: str):
     Parameters:
     content (str): The content to be written to the HTML file.
     """
-    path = static_dir + "index.html"
+    path = content_dir + "index.html"
     f = open(path, "w", encoding="utf-8")
     f.write(content)
     f.close
@@ -112,12 +116,12 @@ def render_issue_body(issue: Issue):
     """
     html_body = markdown2html(issue.body)
     env = Environment(loader=FileSystemLoader("templates"))
-    template = env.get_template("blog_content.html")
+    template = env.get_template("post.html")
     return template.render(issue=issue, html_body=html_body)
 
 
-def save_articles_to_static_dir(issue: Issue, content: str):
-    path = static_dir + f"blog/{issue.number}.html"
+def save_articles_to_content_dir(issue: Issue, content: str):
+    path = content_dir + f"blog/{issue.number}.html"
     f = open(path, "w", encoding="utf-8")
     f.write(content)
     f.close
@@ -129,14 +133,14 @@ if __name__ == "__main__":
     parser.add_argument("github_repo", help="<github_repo>")
     options = parser.parse_args()
 
-    static_dir: str = "./contents/"
+    content_dir: str = "./contents/"
     backup_dir: str = "./backup/"
 
-    dir_init(static_dir, backup_dir)
+    dir_init(content_dir, backup_dir)
     issues = get_all_issues(options.github_token, options.github_repo)
     article_list = render_article_list(issues)
     save_index_as_html(content=article_list)
 
     for issue in issues:
         content = render_issue_body(issue)
-        save_articles_to_static_dir(issue, content=content)
+        save_articles_to_content_dir(issue, content=content)
