@@ -32,7 +32,7 @@ python main.py <github_token> <github_repo>
 
 **[gitblog](https://github.com/yihong0618/gitblog)**
 
-我之正在使用的是yihong老师的 gitblog (自己写的还没能完全自动化)，也是从yihong老师这里第一次看到了用issue写博客，还能用 GitHub 和 Python 实现几乎完全自动化，真是太牛了。如果有写博客的需求，强烈推荐这个项目。
+我正在使用的是yihong老师的 gitblog (自己写的还没能完全自动化)，也是从yihong老师这里第一次看到了用issue写博客，还能用 GitHub 和 Python 实现几乎完全自动化，真是太牛了。如果有写博客的需求，强烈推荐这个项目。
 
 **[Gmeek](https://github.com/Meekdai/Gmeek)**
 
