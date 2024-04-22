@@ -1,14 +1,52 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>rye - 好用的Python包管理工具</title>
-    <link rel="stylesheet" href="https://geoqiao.github.io/templates/static/css/style.css">
-</head>
-<body>
-    <div class="container">
-        <header id="header">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>rye - 好用的Python包管理工具</title>
+        <link rel="stylesheet"
+            href="https://geoqiao.github.io/templates/static/css/style.css">
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/slideout/1.0.1/slideout.min.js"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div id="mobile-navbar" class="mobile-navbar">
+                <div class="mobile-header-logo">
+                    <a href="/" class="logo">Geoqiao</a>
+                </div>
+                <div class="mobile-navbar-icon icon-out">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+
+            <nav id="mobile-menu"
+                class="mobile-menu slideout-menu slideout-menu-left">
+                <ul class="mobile-menu-list">
+
+                    <li class="mobile-menu-item">
+                        <a href="/">
+                            Home
+                        </a>
+                    </li>
+
+                    <li class="mobile-menu-item">
+                        <a href="/tags">
+                            Tags
+                        </a>
+                    </li>
+
+                    <li class="mobile-menu-item">
+                        <a href="/about">
+                            About
+                        </a>
+                    </li>
+
+                </ul>
+            </nav>
+            <header id="header">
     <div class="logo"><a href="/">Geoqiao's Page</a></div>
     <div class="menu">
         <ul>
@@ -18,11 +56,18 @@
         </ul>
     </div>
 </header>
-        <main>
-            
+
+
+            <main>
+                
+<div class="content" id="mobile-panel">
     <article class="post">
-        <h1 class="post__title">rye - 好用的Python包管理工具</h1>
-        <div class="post__meta">2024-01-06</div>
+        <header class="post__header">
+            <h1 class="post__title">rye - 好用的Python包管理工具</h1>
+            <div class="post__meta">
+                <span class="post__time">2024-01-06</span>
+            </div>
+        </header>
         <div class="post__content"><p><a href="https://github.com/mitsuhiko/rye">rye</a>是一个 Python 的包管理器，可以更轻松的管理 Python 项目和虚拟环境，作者是流行 web 框架 flask 的作者<a href="https://github.com/mitsuhiko">Armin Ronacher</a></p>
 <p>作为一个刚开始学习 Python 的新手，它解决了我碰到的两个难题：</p>
 <ol>
@@ -92,11 +137,14 @@ rye sync <span class="pl-c"><span class="pl-c">#</span> 所有的修改都需要
 <h2>最后</h2>
 <p>rye 还支持一些常规的操作，比如接管全局 python、升级项目中某个依赖或者所有依赖的版本、构建/发布包等等功能，可以通过<a href="https://rye-up.com/guide/" rel="nofollow">官方文档</a>查看。</p></div>
     </article>
+</div>
 
-        </main>
-        <footer id="footer">
+            </main>
+            <footer id="footer">
     <p>&copy; 2024 Geoqiao's Page</p>
 </footer>
-    </div>
-</body>
+        </div>
+        <script type="text/javascript"
+            src="https://geoqiao.github.io/templates/static/js/even.js"></script>
+    </body>
 </html>
