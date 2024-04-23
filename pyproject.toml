@@ -9,9 +9,6 @@ dependencies = [
     "Jinja2",
     "PyGithub",
     "feedgen",
-    "requests",
-    "transliterate",
-    "xpinyin",
 ]
 readme = "README.md"
 requires-python = ">= 3.11"
