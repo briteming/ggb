@@ -11,6 +11,7 @@ import os
 import shutil
 
 import requests
+from feedgen.feed import FeedGenerator
 from github import Github
 from github.Issue import Issue
 from github.PaginatedList import PaginatedList
@@ -127,6 +128,26 @@ def save_articles_to_content_dir(issue: Issue, content: str):
     f.close
 
 
+def gen_rss_feed(issues: PaginatedList[Issue]):
+    fg = FeedGenerator()
+    fg.id("https://geoqiao.github.io/contents")
+    fg.title("GeoQiao's Blog")
+    fg.author({"name": "GeoQiao", "email": "geoqiao@example.com"})
+    fg.link(href="https://geoqiao.github.io/contents", rel="alternate")
+    fg.description("This is GeoQiao's Blog")
+
+    for issue in issues:
+        fe = fg.add_entry()
+        fe.id(f"https://geoqiao.github.io/contents/blog/{issue.number}.html")
+        fe.title(issue.title)
+        fe.link(href=f"https://geoqiao.github.io/contents/blog/{issue.number}.html")
+        fe.description(issue.body[:100])
+        fe.published(issue.created_at)
+        fe.content(markdown2html(issue.body), type="html")
+
+    fg.atom_file("./contents/atom.xml")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("github_token", help="<github_token>")
@@ -144,3 +165,5 @@ if __name__ == "__main__":
     for issue in issues:
         content = render_issue_body(issue)
         save_articles_to_content_dir(issue, content=content)
+
+    gen_rss_feed(issues)

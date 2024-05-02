@@ -9,6 +9,7 @@ dependencies = [
     "Jinja2",
     "PyGithub",
     "feedgen",
+    "marko>=2.0.3",
 ]
 readme = "README.md"
 requires-python = ">= 3.11"
