@@ -6,16 +6,39 @@ Read issues from GitHub and generate HTML articles.
 
 Powered by Jinja2 and PyGithub
 """
+
 import argparse
 import os
 import shutil
 
-import requests
 from feedgen.feed import FeedGenerator
 from github import Github
 from github.Issue import Issue
 from github.PaginatedList import PaginatedList
+from github.Repository import Repository
 from jinja2 import Environment, FileSystemLoader
+from lxml.etree import CDATA
+from marko.ext.gfm import gfm
+
+CONTENTS_DIR: str = "./contents/"
+BACKUP_DIR: str = "./backup/"
+
+
+def main(token: str, repo_name: str):
+    dir_init(content_dir=CONTENTS_DIR, backup_dir=BACKUP_DIR)
+    user = login(token)
+    me = get_me(user)
+    repo = get_repo(user, repo_name)
+    issues = get_all_issues(repo, me)
+
+    index_blog = render_blog_index(issues)
+    save_blog_index_as_html(content=index_blog)
+
+    for issue in issues:
+        content = render_issue_body(issue)
+        save_articles_to_content_dir(issue, content=content)
+
+    gen_rss_feed(issues)
 
 
 def dir_init(content_dir: str, backup_dir: str):
@@ -31,15 +54,24 @@ def dir_init(content_dir: str, backup_dir: str):
     os.mkdir(content_dir + "blog/")
     os.mkdir(backup_dir)
 
-    static_dir = content_dir + "static/"
-    if not os.path.exists(static_dir):
-        shutil.copytree("templates/static", static_dir)
+
+def login(token: str):
+    return Github(token)
 
 
-def get_all_issues(
-    github_token: str,
-    github_repo: str,
-) -> PaginatedList[Issue]:
+def get_me(user: Github):
+    return user.get_user().login
+
+
+def get_repo(user: Github, repo: str):
+    return user.get_repo(repo)
+
+
+def is_me(issue: Issue, me: str):
+    return issue.user.login == me
+
+
+def get_all_issues(repo: Repository, me: str) -> PaginatedList[Issue]:
     """Get all issues for a given GitHub repository.
 
     Args:
@@ -49,13 +81,11 @@ def get_all_issues(
     Returns:
         List of GitHub issue objects.
     """
-    user = Github(github_token)
-    repo = user.get_repo(github_repo)
-    issues = repo.get_issues()
+    issues = repo.get_issues(creator=me)
     return issues
 
 
-def render_article_list(issues: PaginatedList[Issue]):
+def render_blog_index(issues: PaginatedList[Issue]) -> str:
     """
     A function that renders an article list using a provided list of issues.
 
@@ -70,39 +100,44 @@ def render_article_list(issues: PaginatedList[Issue]):
     return template.render(issues=issues)
 
 
-def save_index_as_html(content: str):
+def save_blog_index_as_html(content: str):
     """
     Save the provided content as an HTML file at the specified path.
 
     Parameters:
     content (str): The content to be written to the HTML file.
     """
-    path = content_dir + "index.html"
+    path = CONTENTS_DIR + "index.html"
     f = open(path, "w", encoding="utf-8")
     f.write(content)
     f.close
 
 
+# def markdown2html(mdstr: str):
+#     """
+#     Convert markdown text to HTML using the GitHub API.
+
+#     Args:
+#         mdstr (str): The markdown text to be converted to HTML.
+
+#     Returns:
+#         str: The HTML representation of the input markdown text.
+#     """
+#     payload = {"text": mdstr, "mode": "gfm"}
+#     headers = {"Authorization": f"token {options.github_token}"}
+#     try:
+#         response = requests.post(
+#             "https://api.github.com/markdown", json=payload, headers=headers
+#         )
+#         response.raise_for_status()  # Raises an exception if status code is not 200
+#         return response.text
+#     except requests.RequestException as e:
+#         raise Exception(f"markdown2html error: {e}")
+
+
 def markdown2html(mdstr: str):
-    """
-    Convert markdown text to HTML using the GitHub API.
-
-    Args:
-        mdstr (str): The markdown text to be converted to HTML.
-
-    Returns:
-        str: The HTML representation of the input markdown text.
-    """
-    payload = {"text": mdstr, "mode": "gfm"}
-    headers = {"Authorization": "token {}".format(options.github_token)}
-    try:
-        response = requests.post(
-            "https://api.github.com/markdown", json=payload, headers=headers
-        )
-        response.raise_for_status()  # Raises an exception if status code is not 200
-        return response.text
-    except requests.RequestException as e:
-        raise Exception("markdown2html error: {}".format(e))
+    html = gfm.convert(mdstr)
+    return html
 
 
 def render_issue_body(issue: Issue):
@@ -122,7 +157,7 @@ def render_issue_body(issue: Issue):
 
 
 def save_articles_to_content_dir(issue: Issue, content: str):
-    path = content_dir + f"blog/{issue.number}.html"
+    path = CONTENTS_DIR + f"blog/{issue.number}.html"
     f = open(path, "w", encoding="utf-8")
     f.write(content)
     f.close
@@ -143,7 +178,8 @@ def gen_rss_feed(issues: PaginatedList[Issue]):
         fe.link(href=f"https://geoqiao.github.io/contents/blog/{issue.number}.html")
         fe.description(issue.body[:100])
         fe.published(issue.created_at)
-        fe.content(markdown2html(issue.body), type="html")
+        # fe.content(markdown2html(issue.body), type="html")
+        fe.content(CDATA(markdown2html(issue.body)), type="html")
 
     fg.atom_file("./contents/atom.xml")
 
@@ -154,16 +190,4 @@ if __name__ == "__main__":
     parser.add_argument("github_repo", help="<github_repo>")
     options = parser.parse_args()
 
-    content_dir: str = "./contents/"
-    backup_dir: str = "./backup/"
-
-    dir_init(content_dir, backup_dir)
-    issues = get_all_issues(options.github_token, options.github_repo)
-    article_list = render_article_list(issues)
-    save_index_as_html(content=article_list)
-
-    for issue in issues:
-        content = render_issue_body(issue)
-        save_articles_to_content_dir(issue, content=content)
-
-    gen_rss_feed(issues)
+    main(options.github_token, options.github_repo)
