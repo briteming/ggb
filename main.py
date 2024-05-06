@@ -108,9 +108,9 @@ def save_blog_index_as_html(content: str):
     content (str): The content to be written to the HTML file.
     """
     path = CONTENTS_DIR + "index.html"
-    f = open(path, "w", encoding="utf-8")
-    f.write(content)
-    f.close
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+        f.close()
 
 
 # def markdown2html(mdstr: str):
@@ -158,9 +158,9 @@ def render_issue_body(issue: Issue):
 
 def save_articles_to_content_dir(issue: Issue, content: str):
     path = CONTENTS_DIR + f"blog/{issue.number}.html"
-    f = open(path, "w", encoding="utf-8")
-    f.write(content)
-    f.close
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(content)
+        f.close()
 
 
 def gen_rss_feed(issues: PaginatedList[Issue]):
