@@ -28,7 +28,7 @@ jobs:
           cache-dependency-path: "requirements.txt"
       - name: Install Rye
         run: |
-          curl -sSf https://rye-up.com/get | bash
+          curl -sSf https://rye-up.com/get | bash -y
 
       - name: Install dependencies
         run: |
