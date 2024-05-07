@@ -38,7 +38,7 @@ jobs:
       - name: Generate contents
         run: |
           source venv/bin/activate
-          python main.py ${{ secrets.G_T }} ${{ github.repository }}
+          python main.py ${{ secrets.G_T }} geoqiao/github_blog
 
       - name: Push contents
         run: |
