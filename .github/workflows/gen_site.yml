@@ -1,4 +1,4 @@
-name: Generate GitBlog README
+name: Generate Github_blog sites
 
 on:
   workflow_dispatch:
