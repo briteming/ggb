@@ -1,4 +1,4 @@
-name: Generate Github_blog sites
+name: Generate Github_blog site
 
 on:
   workflow_dispatch:
@@ -14,7 +14,7 @@ on:
 
 jobs:
   sync:
-    name: Generate README
+    name: Generate Site
     runs-on: ubuntu-latest
     if: github.repository_owner_id == github.event.issue.user.id || github.event_name == 'push'
     steps:
@@ -23,20 +23,21 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: 3.11
           cache: pip
           cache-dependency-path: "requirements.txt"
-      - name: Install Rye
-        run: |
-          curl -sSf https://rye-up.com/get | bash -y
 
       - name: Install dependencies
         run: |
-          rye sync -f
+          sed '/^-e/d' requirements.lock > requirements.txt
+          python -m pip install --upgrade pip
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
 
       - name: Generate contents
         run: |
-          # source venv/bin/activate
+          source venv/bin/activate
           python main.py ${{ secrets.G_T }} ${{ github.repository }}
 
       - name: Push contents
