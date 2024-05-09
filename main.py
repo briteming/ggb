@@ -110,7 +110,6 @@ def save_blog_index_as_html(content: str):
     path = CONTENTS_DIR + "index.html"
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
-        f.close()
 
 
 # def markdown2html(mdstr: str):
@@ -160,7 +159,6 @@ def save_articles_to_content_dir(issue: Issue, content: str):
     path = CONTENTS_DIR + f"blog/{issue.number}.html"
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
-        f.close()
 
 
 def gen_rss_feed(issues: PaginatedList[Issue]):
