@@ -18,7 +18,7 @@ from github.PaginatedList import PaginatedList
 from github.Repository import Repository
 from jinja2 import Environment, FileSystemLoader
 from lxml.etree import CDATA
-from marko.ext.gfm import gfm
+from marko import Markdown
 
 CONTENTS_DIR: str = "./contents/"
 BACKUP_DIR: str = "./backup/"
@@ -134,8 +134,14 @@ def save_blog_index_as_html(content: str):
 #         raise Exception(f"markdown2html error: {e}")
 
 
+# def markdown2html(mdstr: str):
+#     html = gfm.convert(mdstr)
+#     return html
+
+
 def markdown2html(mdstr: str):
-    html = gfm.convert(mdstr)
+    markdown = Markdown(extensions=["codehilite", "pangu"])
+    html = markdown.convert(mdstr)
     return html
 
 
