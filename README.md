@@ -25,9 +25,9 @@ python main.py <github_token> <github_repo>
 
 - [x] 优化HTML模板（尽力了...等更熟悉 CSS 之后再搞
 - [x] 增加 GitHub Actions 支持，实现 issue 更新后自动部署
-- [ ] 慢慢优化代码（现在优先实现功能、优化先放一放
+- [ ] 慢慢优化代码,比如模板中涉及到仓库和GitHub用户名的部分全部改为变量（现在优先实现功能、优化先放一放
 - [x] 分享搭建的过程，输出中巩固
-- [ ] 增加基于 issue 的评论功能
+- [x] 增加基于 issue 的评论功能
 
 ## 非常感谢：
 
@@ -40,3 +40,7 @@ python main.py <github_token> <github_repo>
 关注Gmeek项目也很久，从这里知道了如何使用 GitHub API 实现 markdown 转 HTML。这个项目已经很完善，按教程操作走，很快就可以实现 GitHub Pages 的搭建。
 
 以及 **Gemini/poe** 等一大批 ai 工具，作为编程初学者赶上这个两年，真的受益良多
+
+**[utterances](https://utteranc.es/)**
+
+评论功能由 utterances 实现，非常简单好用！
