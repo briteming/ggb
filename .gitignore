@@ -16,3 +16,5 @@ backup/
 pyrightconfig.json
 
 .ruff_cache
+.vscode
+.mypy_cache
