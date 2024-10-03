@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Geoqiao的博客 - 文章列表{% endblock %}
+{% block title %}{{ blog_title }} - 文章列表{% endblock %}
 
 {% block content %}
 {% for issue in issues %}
@@ -16,7 +16,7 @@
         {% endif %}
     </div>
     <div class="post-summary">
-        {{ issue.body|truncate(200)|safe }}
+        {{ issue.body|truncate(100)|safe }}
     </div>
     <a href="/contents/blog/{{ issue.number }}.html" class="read-more">阅读全文</a>
 </article>
