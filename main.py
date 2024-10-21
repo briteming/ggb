@@ -99,12 +99,14 @@ def render_blog_index(issues: PaginatedList[Issue]) -> str:
     Returns:
     - str, the rendered article list HTML content.
     """
-    env = Environment(loader=FileSystemLoader("templates"))
-    template = env.get_template("index.html")
     blog_title = CONFIG["blog"]["title"]
     github_name = CONFIG["github"]["name"]
     meta_description = CONFIG["blog"]["description"]
+    theme_path = CONFIG["theme"]["path"]
     google_search_verification = CONFIG["GoogleSearchConsole"]["content"]
+    env = Environment(loader=FileSystemLoader(theme_path))
+    template = env.get_template("index.html")
+
     return template.render(
         issues=issues,
         blog_title=blog_title,
@@ -173,7 +175,8 @@ def render_issue_body(issue: Issue):
     blog_title = CONFIG["blog"]["title"]
     github_name = CONFIG["github"]["name"]
     meta_description = CONFIG["blog"]["description"]
-    env = Environment(loader=FileSystemLoader("templates"))
+    theme_path = CONFIG["theme"]["path"]
+    env = Environment(loader=FileSystemLoader(theme_path))
     template = env.get_template("post.html")
     return template.render(
         issue=issue,
