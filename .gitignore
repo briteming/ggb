@@ -166,3 +166,4 @@ contents/
 backup/
 
 .vscode/
+.ruff_cache/
