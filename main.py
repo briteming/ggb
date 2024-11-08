@@ -10,6 +10,7 @@ Powered by Jinja2 and PyGithub
 import argparse
 import os
 import shutil
+from pathlib import Path
 
 from feedgen.feed import FeedGenerator
 from github import Github
@@ -22,8 +23,8 @@ from marko import Markdown
 
 from configs.config_utils import load_config
 
-CONTENTS_DIR: str = "./contents/"
-BACKUP_DIR: str = "./backup/"
+CONTENTS_DIR: Path = Path("./contents/")
+BACKUP_DIR: Path = Path("./backup/")
 # CONFIG_YAML: str = "./config.yaml"
 CONFIG = load_config()
 
@@ -45,7 +46,7 @@ def main(token: str, repo_name: str):
     gen_rss_feed(issues)
 
 
-def dir_init(content_dir: str, backup_dir: str):
+def dir_init(content_dir: Path, backup_dir: Path):
     """
     A function to initialize directories by removing existing ones and creating new ones.
     """
@@ -55,7 +56,7 @@ def dir_init(content_dir: str, backup_dir: str):
         shutil.rmtree(backup_dir)
 
     os.mkdir(content_dir)
-    os.mkdir(content_dir + "blog/")
+    os.mkdir(content_dir / "blog/")
     os.mkdir(backup_dir)
 
 
@@ -123,7 +124,7 @@ def save_blog_index_as_html(content: str):
     Parameters:
     content (str): The content to be written to the HTML file.
     """
-    path = CONTENTS_DIR + "index.html"
+    path = CONTENTS_DIR / "index.html"
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
 
@@ -188,7 +189,7 @@ def render_issue_body(issue: Issue):
 
 
 def save_articles_to_content_dir(issue: Issue, content: str):
-    path = CONTENTS_DIR + f"blog/{issue.number}.html"
+    path = CONTENTS_DIR / f"blog/{issue.number}.html"
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
 
