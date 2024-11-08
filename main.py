@@ -156,7 +156,7 @@ def save_blog_index_as_html(content: str):
 #     return html
 
 
-def markdown2html(mdstr: str):
+def markdown2html(mdstr: str) -> str:
     markdown = Markdown(extensions=["pangu"])
     html = markdown.convert(mdstr)
     return html
