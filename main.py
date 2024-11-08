@@ -86,7 +86,7 @@ def get_all_issues(repo: Repository, me: str) -> PaginatedList[Issue]:
     Returns:
         A PaginatedList of GitHub issue objects created by the specified user.
     """
-    issues = repo.get_issues(creator=me)
+    issues = repo.get_issues(creator=me)  # type: ignore
     return issues
 
 
