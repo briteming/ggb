@@ -10,6 +10,8 @@ Powered by Jinja2 and PyGithub
 import argparse
 import os
 import shutil
+import time
+from contextlib import contextmanager
 from pathlib import Path
 
 from feedgen.feed import FeedGenerator
@@ -21,12 +23,12 @@ from jinja2 import Environment, FileSystemLoader
 from lxml.etree import CDATA
 from marko import Markdown
 
-from configs.config_utils import load_config
+from configs.config_utils import Config
 
 CONTENTS_DIR: Path = Path("./contents/")
 BACKUP_DIR: Path = Path("./backup/")
-# CONFIG_YAML: str = "./config.yaml"
-CONFIG = load_config()
+
+config = Config()
 
 
 def main(token: str, repo_name: str):
@@ -100,11 +102,11 @@ def render_blog_index(issues: PaginatedList[Issue]) -> str:
     Returns:
     - str, the rendered article list HTML content.
     """
-    blog_title = CONFIG["blog"]["title"]
-    github_name = CONFIG["github"]["name"]
-    meta_description = CONFIG["blog"]["description"]
-    theme_path = CONFIG["theme"]["path"]
-    google_search_verification = CONFIG["GoogleSearchConsole"]["content"]
+    blog_title = config.blog_title
+    github_name = config.github_name
+    meta_description = config.meta_description
+    theme_path = config.theme_path
+    google_search_verification = config.google_search_verification
     env = Environment(loader=FileSystemLoader(theme_path))
     template = env.get_template("index.html")
 
@@ -173,10 +175,10 @@ def render_issue_body(issue: Issue):
     str: The rendered HTML body of the issue.
     """
     html_body = markdown2html(issue.body)
-    blog_title = CONFIG["blog"]["title"]
-    github_name = CONFIG["github"]["name"]
-    meta_description = CONFIG["blog"]["description"]
-    theme_path = CONFIG["theme"]["path"]
+    blog_title = config.blog_title
+    github_name = config.github_name
+    meta_description = config.meta_description
+    theme_path = config.theme_path
     env = Environment(loader=FileSystemLoader(theme_path))
     template = env.get_template("post.html")
     return template.render(
@@ -200,7 +202,7 @@ def gen_rss_feed(issues: PaginatedList[Issue]):
     fg.title("GeoQiao's Blog")
     fg.author({"name": "GeoQiao", "email": "geoqiao@example.com"})
     fg.link(href="https://geoqiao.github.io/contents", rel="alternate")
-    fg.description(f"""{CONFIG["blog"]["description"]}""")
+    fg.description(f"""{config.meta_description}""")
 
     for issue in issues:
         fe = fg.add_entry()
@@ -215,10 +217,19 @@ def gen_rss_feed(issues: PaginatedList[Issue]):
     fg.atom_file("./contents/atom.xml")
 
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("github_token", help="<github_token>")
-    parser.add_argument("github_repo", help="<github_repo>")
-    options = parser.parse_args()
+@contextmanager
+def timer_context():
+    start_time = time.time()
+    yield
+    end_time = time.time()
+    print(f"The script has finished running, and it took {end_time - start_time} s。")
 
-    main(options.github_token, options.github_repo)
+
+if __name__ == "__main__":
+    with timer_context():
+        parser = argparse.ArgumentParser()
+        parser.add_argument("github_token", help="<github_token>")
+        parser.add_argument("github_repo", help="<github_repo>")
+        options = parser.parse_args()
+
+        main(options.github_token, options.github_repo)
