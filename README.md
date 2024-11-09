@@ -7,19 +7,18 @@
 1. 使用 PyGithub 读取 GitHub 仓库的 issues
    > 可以返回 issue 的标题、创建时间、标签、内容等
 2. 利用 GitHub API 将第一步得到的 markdown 格式的 issue 内容转换为 HTML
-3. 使用 Jinja2 写一个HTML模板，并将第一步得到的内容渲染
+3. 使用 Jinja2 写一个 HTML 模板，并将第一步得到的内容渲染
 
-**demo**
-
-[geoqiao's pages](https://geoqiao.github.io/contents)
-目前还很简陋，但能写到这样已经很开心了
+**demo**: [geoqiao's pages](https://geoqiao.github.io/)
 
 ## 使用方法
 
-```bash
-# 安装Python、并安装依赖后
-python main.py <github_token> <github_repo>
-```
+1. 创建<user_name>.github.io仓库
+2. 将此仓库的所有文件复制到<user_name>.github.io仓库中
+3. 配置 GitHub Token & [utterances](https://utteranc.es/)
+4. 修改`./configs/config.yaml`文件中的配置信息,例如将用户名、博客名称切换为你自己的
+5. 修改 index.html 为你的个人信息
+6. 创建你的 issues
 
 ## ROADMAP && TODO
 
@@ -28,8 +27,9 @@ python main.py <github_token> <github_repo>
 - [x] 慢慢优化代码,比如模板中涉及到仓库和GitHub用户名的部分全部改为变量（现在优先实现功能、优化先放一放
 - [x] 分享搭建的过程，输出中巩固
 - [x] 增加基于 issue 的评论功能
-- [ ] 增加模板选择功能
+- [x] 增加模板选择功能(就差新模板了)
 - [ ] 增加SEO优化配置项
+- [ ] 增加这个代码仓库更新后，自动同步至GitHub Pages仓库的功能
 
 ## 非常感谢：
 
