@@ -14,3 +14,9 @@ dependencies = [
 
 [dependency-groups]
 dev = []
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+typeCheckingMode = "strict"
+# extraPaths = [".venv/lib/python3.11/site-packages"]

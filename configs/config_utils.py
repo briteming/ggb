@@ -1,12 +1,13 @@
 from pathlib import Path
+from typing import Any
 
 import yaml
 
 
 class Config:
-    CONFIG_FILE = Path("./configs/config.yaml")
+    CONFIG_FILE: Path = Path("./configs/config.yaml")
 
-    def __init__(self):
+    def __init__(self) -> None:
         config_loaded = Config.load_config()
         self.blog_title = config_loaded["blog"]["title"]
         self.github_name = config_loaded["github"]["name"]
@@ -17,7 +18,7 @@ class Config:
         ]
 
     @classmethod
-    def load_config(cls) -> dict:
+    def load_config(cls) -> dict[str, Any]:
         try:
             with open(cls.CONFIG_FILE, "r") as file:
                 config = yaml.safe_load(file)

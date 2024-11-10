@@ -14,13 +14,13 @@ import time
 from contextlib import contextmanager
 from pathlib import Path
 
-from feedgen.feed import FeedGenerator
+from feedgen.feed import FeedGenerator  # type: ignore
 from github import Github
 from github.Issue import Issue
 from github.PaginatedList import PaginatedList
 from github.Repository import Repository
 from jinja2 import Environment, FileSystemLoader
-from lxml.etree import CDATA
+from lxml.etree import CDATA  # type: ignore
 from marko import Markdown
 
 from configs.config_utils import Config
@@ -62,19 +62,19 @@ def dir_init(content_dir: Path, backup_dir: Path):
     os.mkdir(backup_dir)
 
 
-def login(token: str):
+def login(token: str) -> Github:
     return Github(token)
 
 
-def get_me(user: Github):
+def get_me(user: Github) -> str:
     return user.get_user().login
 
 
-def get_repo(user: Github, repo: str):
+def get_repo(user: Github, repo: str) -> Repository:
     return user.get_repo(repo)
 
 
-def is_me(issue: Issue, me: str):
+def is_me(issue: Issue, me: str) -> bool:
     return issue.user.login == me
 
 
@@ -164,7 +164,7 @@ def markdown2html(mdstr: str) -> str:
     return html
 
 
-def render_issue_body(issue: Issue):
+def render_issue_body(issue: Issue) -> str:
     """
     Render the body of an issue by converting markdown to HTML and injecting it into a template.
 
@@ -198,30 +198,30 @@ def save_articles_to_content_dir(issue: Issue, content: str):
 
 def gen_rss_feed(issues: PaginatedList[Issue]):
     fg = FeedGenerator()
-    fg.id("https://geoqiao.github.io/contents")
-    fg.title("GeoQiao's Blog")
-    fg.author({"name": "GeoQiao", "email": "geoqiao@example.com"})
-    fg.link(href="https://geoqiao.github.io/contents", rel="alternate")
-    fg.description(f"""{config.meta_description}""")
+    fg.id("https://geoqiao.github.io/contents")  # type: ignore
+    fg.title("GeoQiao's Blog")  # type: ignore
+    fg.author({"name": "GeoQiao", "email": "geoqiao@example.com"})  # type: ignore
+    fg.link(href="https://geoqiao.github.io/contents", rel="alternate")  # type: ignore
+    fg.description(f"""{config.meta_description}""")  # type: ignore
 
     for issue in issues:
-        fe = fg.add_entry()
-        fe.id(f"https://geoqiao.github.io/contents/blog/{issue.number}.html")
-        fe.title(issue.title)
-        fe.link(href=f"https://geoqiao.github.io/contents/blog/{issue.number}.html")
-        fe.description(issue.body[:100])
-        fe.published(issue.created_at)
+        fe = fg.add_entry()  # type: ignore
+        fe.id(f"https://geoqiao.github.io/contents/blog/{issue.number}.html")  # type: ignore
+        fe.title(issue.title)  # type: ignore
+        fe.link(href=f"https://geoqiao.github.io/contents/blog/{issue.number}.html")  # type: ignore
+        fe.description(issue.body[:100])  # type: ignore
+        fe.published(issue.created_at)  # type: ignore
         # fe.content(markdown2html(issue.body), type="html")
-        fe.content(CDATA(markdown2html(issue.body)), type="html")
+        fe.content(CDATA(markdown2html(issue.body)), type="html")  # type: ignore
 
-    fg.atom_file("./contents/atom.xml")
+    fg.atom_file("./contents/atom.xml")  # type: ignore
 
 
 @contextmanager
 def timer_context():
-    start_time = time.time()
+    start_time = time.perf_counter()
     yield
-    end_time = time.time()
+    end_time = time.perf_counter()
     print(f"The script has finished running, and it took {end_time - start_time} s。")
 
 
