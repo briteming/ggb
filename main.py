@@ -25,14 +25,11 @@ from marko import Markdown
 
 from configs.config_utils import Config
 
-CONTENTS_DIR: Path = Path("./contents/")
-BACKUP_DIR: Path = Path("./backup/")
-
 config = Config()
 
 
 def main(token: str, repo_name: str):
-    dir_init(content_dir=CONTENTS_DIR, backup_dir=BACKUP_DIR)
+    dir_init(content_dir=config.content_dir, blog_dir=config.blog_dir)
     user = login(token)
     me = get_me(user)
     repo = get_repo(user, repo_name)
@@ -48,18 +45,15 @@ def main(token: str, repo_name: str):
     gen_rss_feed(issues)
 
 
-def dir_init(content_dir: Path, backup_dir: Path):
+def dir_init(content_dir: Path, blog_dir: Path):
     """
     A function to initialize directories by removing existing ones and creating new ones.
     """
     if os.path.exists(content_dir):
         shutil.rmtree(content_dir)
-    if os.path.exists(backup_dir):
-        shutil.rmtree(backup_dir)
 
     os.mkdir(content_dir)
-    os.mkdir(content_dir / "blog/")
-    os.mkdir(backup_dir)
+    os.mkdir(content_dir / blog_dir)
 
 
 def login(token: str) -> Github:
@@ -126,36 +120,9 @@ def save_blog_index_as_html(content: str):
     Parameters:
     content (str): The content to be written to the HTML file.
     """
-    path = CONTENTS_DIR / "index.html"
+    path = config.content_dir / "index.html"
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
-
-
-# def markdown2html(mdstr: str):
-#     """
-#     Convert markdown text to HTML using the GitHub API.
-
-#     Args:
-#         mdstr (str): The markdown text to be converted to HTML.
-
-#     Returns:
-#         str: The HTML representation of the input markdown text.
-#     """
-#     payload = {"text": mdstr, "mode": "gfm"}
-#     headers = {"Authorization": f"token {options.github_token}"}
-#     try:
-#         response = requests.post(
-#             "https://api.github.com/markdown", json=payload, headers=headers
-#         )
-#         response.raise_for_status()  # Raises an exception if status code is not 200
-#         return response.text
-#     except requests.RequestException as e:
-#         raise Exception(f"markdown2html error: {e}")
-
-
-# def markdown2html(mdstr: str):
-#     html = gfm.convert(mdstr)
-#     return html
 
 
 def markdown2html(mdstr: str) -> str:
@@ -191,30 +158,30 @@ def render_issue_body(issue: Issue) -> str:
 
 
 def save_articles_to_content_dir(issue: Issue, content: str):
-    path = CONTENTS_DIR / f"blog/{issue.number}.html"
+    path = config.content_dir / f"blog/{issue.number}.html"
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
 
 
 def gen_rss_feed(issues: PaginatedList[Issue]):
     fg = FeedGenerator()
-    fg.id("https://geoqiao.github.io/contents")  # type: ignore
-    fg.title("GeoQiao's Blog")  # type: ignore
-    fg.author({"name": "GeoQiao", "email": "geoqiao@example.com"})  # type: ignore
-    fg.link(href="https://geoqiao.github.io/contents", rel="alternate")  # type: ignore
+    fg.id(config.blog_url)  # type: ignore
+    fg.title(config.blog_title)  # type: ignore
+    fg.author({"name": config.author_name, "email": config.author_email})  # type: ignore
+    fg.link(href=config.blog_url, rel="alternate")  # type: ignore
     fg.description(f"""{config.meta_description}""")  # type: ignore
 
     for issue in issues:
         fe = fg.add_entry()  # type: ignore
-        fe.id(f"https://geoqiao.github.io/contents/blog/{issue.number}.html")  # type: ignore
+        fe.id(f"{config.blog_url}{config.blog_dir}/{issue.number}.html")  # type: ignore
         fe.title(issue.title)  # type: ignore
-        fe.link(href=f"https://geoqiao.github.io/contents/blog/{issue.number}.html")  # type: ignore
+        fe.link(href=f"{config.blog_url}{config.blog_dir}/{issue.number}.html")  # type: ignore
         fe.description(issue.body[:100])  # type: ignore
         fe.published(issue.created_at)  # type: ignore
-        # fe.content(markdown2html(issue.body), type="html")
+        fe.updated(issue.updated_at)  # type: ignore
         fe.content(CDATA(markdown2html(issue.body)), type="html")  # type: ignore
 
-    fg.atom_file("./contents/atom.xml")  # type: ignore
+    fg.atom_file(config.content_dir / config.rss_atom_path)  # type: ignore
 
 
 @contextmanager
