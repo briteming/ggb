@@ -57,18 +57,56 @@ def dir_init(content_dir: Path, blog_dir: Path):
 
 
 def login(token: str) -> Github:
+    """
+    Authenticate with GitHub using a token and return a Github instance.
+
+    Args:
+        token (str): A GitHub personal access token.
+
+    Returns:
+        Github: An authenticated Github instance.
+    """
     return Github(token)
 
 
 def get_me(user: Github) -> str:
+    """
+    Get the login name of the authenticated user.
+
+    Args:
+        user (Github): An authenticated Github instance.
+
+    Returns:
+        str: The login name of the authenticated user.
+    """
     return user.get_user().login
 
 
-def get_repo(user: Github, repo: str) -> Repository:
-    return user.get_repo(repo)
+def get_repo(user: Github, repo_name: str) -> Repository:
+    """
+    Get a repository by name for a given authenticated user.
+
+    Args:
+        user (Github): An authenticated Github instance.
+        repo_name (str): The name of the repository to retrieve.
+
+    Returns:
+        Repository: A Github repository object.
+    """
+    return user.get_repo(repo_name)
 
 
 def is_me(issue: Issue, me: str) -> bool:
+    """
+    Check if an issue was created by the authenticated user.
+
+    Args:
+        issue (Issue): The issue to check.
+        me (str): The login name of the authenticated user.
+
+    Returns:
+        bool: True if the issue was created by the authenticated user, False otherwise.
+    """
     return issue.user.login == me
 
 
@@ -164,6 +202,14 @@ def save_articles_to_content_dir(issue: Issue, content: str):
 
 
 def gen_rss_feed(issues: PaginatedList[Issue]):
+    """Generate an RSS feed for the given issues.
+
+    Args:
+        issues (PaginatedList): A paginated list of GitHub issue objects.
+
+    Returns:
+        None
+    """
     fg = FeedGenerator()
     fg.id(config.blog_url)  # type: ignore
     fg.title(config.blog_title)  # type: ignore
@@ -186,6 +232,15 @@ def gen_rss_feed(issues: PaginatedList[Issue]):
 
 @contextmanager
 def timer_context():
+    """
+    A context manager that measures the execution time of the code within its scope.
+
+    This context manager starts a timer when entering the context and stops the timer when exiting the context. It then prints the elapsed time in seconds.
+
+    Usage:
+    with timer_context():
+        # Code to measure execution time
+    """
     start_time = time.perf_counter()
     yield
     end_time = time.perf_counter()
