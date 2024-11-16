@@ -196,7 +196,7 @@ def render_issue_body(issue: Issue) -> str:
 
 
 def save_articles_to_content_dir(issue: Issue, content: str):
-    path = config.content_dir / f"blog/{issue.number}.html"
+    path = config.content_dir / config.blog_dir / f"{issue.number}.html"
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
 
