@@ -1,19 +1,19 @@
 # 博客信息
 blog:
-  title: GeoQiao's Blog
+  title: brite's Blog
   description: 探索学习 Python 的数据分析师，包括 Python教程、学习路径、常用工具、 VSCode 配置及数据分析等领域的相关知识。
   url: https://geoqiao.github.io/contents/
   content_dir: "./contents/"
   blog_dir: "blog/"
   rss_atom_path: "atom.xml"
   author:
-    name: geoqiao
+    name: brite
     email: geoqiao@example.com
 
 # GitHub 相关配置
 github:
-  name: geoqiao # GitHub 用户名
-  repo: geoqiao/geoqiao.github.io # GitHub 仓库名称
+  name: briteming # GitHub用户名
+  repo: briteming/ggb # GitHub仓库名
 
 # Google Search Console
 GoogleSearchConsole:
